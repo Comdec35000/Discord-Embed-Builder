@@ -1,1 +1,3 @@
-console.log('Hello world !');
+
+
+module.exports.load = require('./src/load')
