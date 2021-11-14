@@ -1,3 +1,5 @@
 
 # Test content
 /test/*
+
+node_modules/

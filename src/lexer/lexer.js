@@ -48,6 +48,7 @@ class Lexer {
             newline = true;
         }
         if(!(this.ln >= this.content.length)) this.currentChar = this.content[this.ln][this.col];
+        if(!this.currentChar) this.advance();
         return newline;
     }
 
@@ -74,7 +75,10 @@ class Lexer {
 
         while(this.content[this.ln]) {
             this.advance();
+
             if(!this.content[this.ln]) break;
+            this.ignoreSpaces();
+            console.log(this.currentChar);
 
             if(this.currentChar === '<') {
                 this.buildTag();
@@ -154,7 +158,6 @@ class Lexer {
         } catch (err) {}
 
         return txt;
-
     }
 
     buildContent() {
@@ -179,6 +182,8 @@ class Lexer {
             if(this.advance()) content += '\n';
 
         }
+
+        if((/^[ \t\r\n]+$/).test(content)) return;
 
         return this.tokens.push(new Token(Token.types.CONTENT, content));
 

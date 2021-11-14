@@ -1,5 +1,6 @@
 
 const fs = require('fs');
+const Compiler = require('./compiler/compiler.js');
 const Lexer = require('./lexer/lexer.js');
 const Parser = require('./parser/parser.js');
 
@@ -29,7 +30,12 @@ class EmbedBuilder {
         }
 
         const tokens = new Lexer(this.content).lex();
+
         const embedData = new Parser(tokens).parse();
+        console.log(embedData);
+        const messageEmbeds = new Compiler(embedData).compil();
+        
+        return messageEmbeds;
 
     }
 
