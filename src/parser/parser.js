@@ -1,7 +1,8 @@
 const Token = require("../lexer/token");
 
 class Parser {
-    constructor(tokens) {
+    constructor(tokens, base) {
+        this.base = base;
         this.tokens = tokens;
 
         this.pos = -1;
@@ -29,7 +30,8 @@ class Parser {
 
     }
 
-    buildTag(content, tagEnd) {                 
+    buildTag(content, tagEnd) {         
+        if(!this.currentTok) return;
         if(this.currentTok.type === Token.types.BLOCK_TAG) {
             if(this.currentTok.content.tagType == 'meta') {
 
@@ -65,6 +67,7 @@ class Parser {
             return;
         }
 
+        if(!this.currentTok) return;
         if(!(this.currentTok.type === Token.types.TAG_CLOSE && this.currentTok.content.tegType === tagEnd)) {
             this.advance(); 
             this.buildTag(content, tagEnd);

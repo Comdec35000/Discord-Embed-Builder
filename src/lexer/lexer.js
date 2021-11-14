@@ -1,4 +1,5 @@
 
+const { showContext } = require('../utis.js');
 const Token = require('./token.js');
 
 
@@ -52,8 +53,27 @@ class Lexer {
         return newline;
     }
 
+    advanceIgnoreSpace() {
+        let newline = false;
+
+        this.col++;
+        if(!(this.ln >= this.content.length) && !this.content[this.ln][this.col]) {
+            this.col = 0;
+            this.ln++;
+            newline = true;
+        }
+        if(!(this.ln >= this.content.length)) this.currentChar = this.content[this.ln][this.col];
+        return newline;
+    }
+
     advanceNoNewlines() {
-        if(this.advance()) throw new Error(this.ERRORS.unexpectedSyntax + this.showContext(this.col));
+        if(this.advance()) throw new Error(this.ERRORS.unexpectedSyntax + showContext(this.col, this.col, this.content));
+    }
+
+    advanceLine() {
+        this.col = -1;
+        this.ln++;
+        if(!(this.ln >= this.content.length)) this.currentChar = this.content[this.ln][this.col];
     }
 
     goBack() {
@@ -81,6 +101,15 @@ class Lexer {
 
             if(this.currentChar === '<') {
                 this.buildTag();
+            } else if(this.currentChar === '#') {
+                let copy = this.copy();
+
+                copy.advance();
+                if(copy.currentChar == '#') {
+                    this.advanceLine();
+                } else {
+                    this.buildContent();
+                }
             } else {
                 this.buildContent();
             }
@@ -142,7 +171,7 @@ class Lexer {
         if(!this.currentChar == '=') return;
         this.advanceNoNewlines();
         this.ignoreSpaces();
-        if(!this.currentChar == '"') throw new Error(this.ERRORS.unexpectedSyntax + this.showContext(this.col));
+        if(!this.currentChar == '"') throw new Error(this.ERRORS.unexpectedSyntax + showContext(this.col, this.col, this.content));
 
         var txt = '';
         this.advanceNoNewlines();
@@ -177,8 +206,22 @@ class Lexer {
                 }
             }
 
+            if(this.currentChar == '#') {
+                let copy = this.copy();
+
+                copy.advance();
+                if(copy.currentChar == '#') {
+                    this.goBack();
+                    break;
+                }
+    
+            }
+
             content += this.currentChar;
-            if(this.advance()) content += '\n';
+            if(this.advanceIgnoreSpace()) content += '\n';
+            while(!this.currentChar) {
+                if(this.advanceIgnoreSpace()) content += '\n'
+            };
 
         }
 
@@ -190,21 +233,6 @@ class Lexer {
 
     copy() {
         return Object.assign(new Lexer(), {...this});
-    }
-
-    showContext(idxStart, idxEnd) {
-
-        idxStart = idxStart ?? 0;
-        idxEnd = idxEnd ?? idxStart;
-
-        let txt = '';
-        txt += '\n';
-        txt += this.content[this.ln].join('');
-        txt += '\n';
-        for(let i = 0; i < idxStart-1; i++) txt += ' ';
-        for(let i = 0; i <= idxEnd - idxStart; i++) txt += '^';
-
-        return txt;
     }
 
 }

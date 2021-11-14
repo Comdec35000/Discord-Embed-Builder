@@ -29,6 +29,12 @@ class EmbedBuilder {
             this.content = this.content.replace(/<\$+\w+>/g, this.params[key]);
         }
 
+        this.content = this.content.replace(/<(\/)?§b>/g, "**");
+        this.content = this.content.replace(/<(\/)?§i>/g, "_");
+        this.content = this.content.replace(/<(\/)?§u>/g, "__");
+        this.content = this.content.replace(/<(\/)?§r>/g, "`");
+        this.content = this.content.replace(/<(\/)?§s>/g, "~~");
+
         const tokens = new Lexer(this.content).lex();
         const embedData = new Parser(tokens).parse();
         const messageEmbeds = new Compiler(embedData).compil();

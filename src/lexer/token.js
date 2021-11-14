@@ -8,9 +8,11 @@ class Token {
         CONTENT: "CONTENT_TOKEN"
     }
 
-    constructor(type, content) {
+    constructor(type, content, start, end) {
         this.type = type;
         this.content = content ?? {};
+        this.start = start ?? 0;
+        this.end = end ?? 0;
     }
     
 }
