@@ -54,11 +54,6 @@ class Parser {
                 text : ''
             }
 
-            console.log('________________________');
-            console.log(this.currentTok);
-            console.log(content);
-            console.log('________________________');
-
             this.advance();
             this.buildTag(tagContent, tagContent.type);
 

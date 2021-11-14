@@ -78,7 +78,6 @@ class Lexer {
 
             if(!this.content[this.ln]) break;
             this.ignoreSpaces();
-            console.log(this.currentChar);
 
             if(this.currentChar === '<') {
                 this.buildTag();

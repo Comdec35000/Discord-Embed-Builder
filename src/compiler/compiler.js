@@ -10,14 +10,12 @@ class Compiler {
     }
 
     compil() {
-        console.log('bbb');
         this.data.content.forEach(this.buildEmbed);
 
         return { embeds: this.embeds };
     }
 
     buildEmbed(embedData) {
-        console.log('ccc');
 
         var embed = new MessageEmbed();
 
@@ -28,9 +26,6 @@ class Compiler {
         embed.setDescription(embedData.text);
 
         embedData.content.forEach(element => {
-
-            console.log(element);
-
             switch(element.type) {
                 case 'title' :
                     embed.setTitle(element.text);
@@ -41,9 +36,10 @@ class Compiler {
             }
         });
 
+        this.embeds.push(embed);
+
     }
     
-
 }
 
 module.exports = Compiler;

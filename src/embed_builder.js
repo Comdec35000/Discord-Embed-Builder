@@ -30,11 +30,9 @@ class EmbedBuilder {
         }
 
         const tokens = new Lexer(this.content).lex();
-
         const embedData = new Parser(tokens).parse();
-        console.log(embedData);
         const messageEmbeds = new Compiler(embedData).compil();
-        
+
         return messageEmbeds;
 
     }
