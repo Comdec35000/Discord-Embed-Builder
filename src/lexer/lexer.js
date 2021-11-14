@@ -12,22 +12,24 @@ class Lexer {
 
     constructor(content) {
 
-        var body = [];
+        if(content) {
+            var body = [];
 
-        content = content.split(/\r?\n/);
-        for(let ln of content) {
-            ln = ln.replace(/(\t+)/, '');
-            ln = ln.split('');
+            content = content.split(/\r?\n/);
+            for(let ln of content) {
+                ln = ln.replace(/(\t+)/, '');
+                ln = ln.split('');
 
-            while(ln[0] == ' ') {
-                ln.shift();
+                while(ln[0] == ' ') {
+                    ln.shift();
+                }
+
+                body.push(ln)
             }
 
-            body.push(ln)
+
+            this.content = body;
         }
-
-
-        this.content = body;
 
         this.ln = 0;
         this.col = -1;
@@ -40,12 +42,12 @@ class Lexer {
         let newline = false;
 
         this.col++;
-        if(this.content[this.ln][this.col] == "\n") {
+        if(!(this.ln >= this.content.length) && !this.content[this.ln][this.col]) {
             this.col = 0;
             this.ln++;
             newline = true;
         }
-        this.currentChar = this.content[this.ln][this.col];
+        if(!(this.ln >= this.content.length)) this.currentChar = this.content[this.ln][this.col];
         return newline;
     }
 
@@ -53,12 +55,26 @@ class Lexer {
         if(this.advance()) throw new Error(this.ERRORS.unexpectedSyntax + this.showContext(this.col));
     }
 
+    goBack() {
+        if(this.col <= 0) {
+            this.ln --;
+            this.col = this.content[this.ln].length - 1;
+            return;
+        }
+        this.col --;
+    }
+
+    ignoreSpaces() {
+        while((/[ \t]+/).test(this.currentChar)) {
+            this.advance();
+        }
+    }
+
     lex() {
 
-        while(!(this.ln == this.content.length + 1)) {
+        while(this.content[this.ln]) {
             this.advance();
-
-            console.log("aaaaa");
+            if(!this.content[this.ln]) break;
 
             if(this.currentChar === '<') {
                 this.buildTag();
@@ -71,7 +87,7 @@ class Lexer {
 
     }
 
-    buildTag() {
+    buildTag(test) {
 
         let token = new Token();
         
@@ -83,10 +99,10 @@ class Lexer {
         }
 
         let keyword = this.buildWord();
-        token.content.tagType = keyword;
+        token.content.tagType = keyword.toLowerCase();
 
         while(this.currentChar != '>') {
-            this.advanceNoNewlines();
+            this.advance();
             if(!this.currentChar) break;
 
             if(this.currentChar == '/') token.type = Token.types.BLOCK_TAG;
@@ -95,12 +111,11 @@ class Lexer {
                 token.content.args = token.content.args ?? {};
                 token.content.args[this.buildWord()] = this.buildArg();
             }
+
         }
 
         if(!token.type) token.type = Token.types.TAG_OPEN;
-
-        console.log(token);
-
+        if(test) return token;
         return this.tokens.push(token);
 
     }
@@ -120,8 +135,10 @@ class Lexer {
     }
 
     buildArg() {
+        this.ignoreSpaces()
         if(!this.currentChar == '=') return;
         this.advanceNoNewlines();
+        this.ignoreSpaces();
         if(!this.currentChar == '"') throw new Error(this.ERRORS.unexpectedSyntax + this.showContext(this.col));
 
         var txt = '';
@@ -138,6 +155,37 @@ class Lexer {
 
         return txt;
 
+    }
+
+    buildContent() {
+
+        var content = '';
+        var run = true;
+
+        while(run) {
+
+            if(!this.currentChar) run = false;
+
+            if(this.currentChar == '<') {
+                let copy = this.copy();
+
+                if(copy.buildTag(true)) {
+                    this.goBack();
+                    break;
+                }
+            }
+
+            content += this.currentChar;
+            if(this.advance()) content += '\n';
+
+        }
+
+        return this.tokens.push(new Token(Token.types.CONTENT, content));
+
+    }
+
+    copy() {
+        return Object.assign(new Lexer(), {...this});
     }
 
     showContext(idxStart, idxEnd) {

@@ -1,7 +1,7 @@
 
 const fs = require('fs');
 const Lexer = require('./lexer/lexer.js');
-
+const Parser = require('./parser/parser.js');
 
 class EmbedBuilder {
 
@@ -29,7 +29,7 @@ class EmbedBuilder {
         }
 
         const tokens = new Lexer(this.content).lex();
-        console.log(tokens);
+        const embedData = new Parser(tokens).parse();
 
     }
 
