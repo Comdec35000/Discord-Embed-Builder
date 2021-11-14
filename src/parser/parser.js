@@ -1,7 +1,7 @@
 const Token = require("../lexer/token");
 
 class Parser {
-    constructor(tokens, base) {
+    constructor(tokens, ...base) {
         this.base = base;
         this.tokens = tokens;
 

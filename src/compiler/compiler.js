@@ -1,10 +1,11 @@
 
 const { MessageEmbed } = require('discord.js');
+const { compilerSchema } = require('./compiler_schema');
 
 
 class Compiler {
 
-    constructor(data, base) {
+    constructor(data, ...base) {
         this.base = base;
         this.data = data;
         this.embeds = [];
@@ -30,49 +31,7 @@ class Compiler {
 
             var element = embedData.content[key];
 
-            switch(element.type) {
-    
-                case 'title' :
-                    embed.setTitle(element.text);
-                    break;
-                
-                case 'div' :
-                    embed.addField(
-                        element.args.title ?? '',
-                        element.text ?? ''
-                    );
-                    break;
-                
-                case 'span' :
-                    embed.addField(
-                        element.args.title ?? '',
-                        element.text ?? '',
-                        true
-                    );
-                    break;
-                
-                case 'img' :
-                    embed.setImage(element.args.url ?? '');
-                    break;
-
-                case 'thumb' :
-                    embed.setThumbnail(element.args.url ?? '');
-                    break;
-
-                case 'footer' :
-                    embed.setFooter(element.text, element.args.url ?? '');
-                    break;
-                
-                case 'author' :
-                    embed.setAuthor(element.text, element.args.url ?? '', element.args.ref ?? '');
-                    break;
-
-                case 'meta' :
-                    break;
-
-                default :
-                    throw new Error('Unrecognize tag type : ' + element.type);
-            }
+            compilerSchema.find(s => s.name === element.type).build(element, embed);
         }
 
         return this.embeds.push(embed);
