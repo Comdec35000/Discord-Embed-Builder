@@ -11,6 +11,14 @@ module.exports.compilerSchema = [
     },
 
     {
+        name: 'embed',
+        block: false,
+        build: function(element, embed) {
+            return
+        }
+    },
+
+    {
         name: 'title',
         block: false,
         build: function(element, embed) {

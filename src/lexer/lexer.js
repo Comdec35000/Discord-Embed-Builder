@@ -1,4 +1,5 @@
 
+const { compilerSchema } = require('../compiler/compiler_schema.js');
 const { showContext } = require('../utis.js');
 const Token = require('./token.js');
 
@@ -8,10 +9,11 @@ class Lexer {
     variableChars = /[a-zA-Z0-9_]+/;
 
     ERRORS = {
-        unexpectedSyntax : "DiscordEmbedBuilder.Error.UnexpectedSyntax : "
+        unexpectedSyntax : "DiscordEmbedBuilder.Error.UnexpectedSyntax : ",
+        unknowTag : "DiscordEmbedBuilder.Error.UnknowTag : "
     }
 
-    constructor(...content) {
+    constructor(content) {
 
         if(content) {
             var body = [];
@@ -67,7 +69,7 @@ class Lexer {
     }
 
     advanceNoNewlines() {
-        if(this.advance()) throw new Error(this.ERRORS.unexpectedSyntax + showContext(this.col, this.col, this.content));
+        if(this.advance()) throw new Error(this.ERRORS.unexpectedSyntax + showContext(this.col, this.col, this.ln, this.content));
     }
 
     advanceLine() {
@@ -121,6 +123,8 @@ class Lexer {
 
     buildTag(test) {
 
+        let startPos = this.col;
+
         let token = new Token();
         
         this.advanceNoNewlines();
@@ -147,7 +151,14 @@ class Lexer {
         }
 
         if(!token.type) token.type = Token.types.TAG_OPEN;
+
         if(test) return token;
+        if(!compilerSchema.find(s => s.name === keyword)) throw new Error(this.ERRORS.unknowTag + keyword + showContext(startPos, this.col, this.ln, this.content));
+
+        if((token.type != Token.types.TAG_CLOSE) && (token.type != (compilerSchema.find(s => s.name === keyword).block ? Token.types.BLOCK_TAG : Token.types.TAG_OPEN))) {
+            throw new Error(this.ERRORS.unexpectedSyntax + showContext(startPos, this.col, this.ln, this.content));
+        }
+
         return this.tokens.push(token);
 
     }
@@ -171,7 +182,7 @@ class Lexer {
         if(!this.currentChar == '=') return;
         this.advanceNoNewlines();
         this.ignoreSpaces();
-        if(!this.currentChar == '"') throw new Error(this.ERRORS.unexpectedSyntax + showContext(this.col, this.col, this.content));
+        if(!this.currentChar == '"') throw new Error(this.ERRORS.unexpectedSyntax + showContext(this.col, this.col, this.ln, this.content));
 
         var txt = '';
         this.advanceNoNewlines();

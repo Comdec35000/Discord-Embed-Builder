@@ -5,7 +5,7 @@ const { compilerSchema } = require('./compiler_schema');
 
 class Compiler {
 
-    constructor(data, ...base) {
+    constructor(data, base) {
         this.base = base;
         this.data = data;
         this.embeds = [];
