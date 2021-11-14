@@ -36,8 +36,8 @@ class EmbedBuilder {
         this.content = this.content.replace(/<(\/)?§s>/g, "~~");
 
         const tokens = new Lexer(this.content).lex();
-        const embedData = new Parser(tokens).parse();
-        const messageEmbeds = new Compiler(embedData).compil();
+        const embedData = new Parser(tokens, this.content).parse();
+        const messageEmbeds = new Compiler(embedData, this.content).compil();
 
         return messageEmbeds;
 

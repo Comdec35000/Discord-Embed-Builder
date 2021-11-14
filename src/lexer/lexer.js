@@ -11,7 +11,7 @@ class Lexer {
         unexpectedSyntax : "DiscordEmbedBuilder.Error.UnexpectedSyntax : "
     }
 
-    constructor(content) {
+    constructor(...content) {
 
         if(content) {
             var body = [];
