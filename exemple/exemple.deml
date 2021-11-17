@@ -1,0 +1,31 @@
+<embed>
+    <title>My embed title</title>
+
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+    Porro, consequatur eos aliquam earum illo consequuntur. 
+    Error, aperiam laboriosam! Velit excepturi voluptatibus
+    asperiores rerum amet animi consectetur nihil pariatur,
+    sint sequi?
+
+    All the texts supports markup like *italic*, **bold**, __underline__ or ~~even striked~~ 
+
+    You can also create code blocks :
+
+    ```python
+        print ("Hello world !")
+    ```
+
+    ```
+        you can use custom tags for the markdown :
+        <§b> bold
+        <§i> italic
+        <§u> underline
+        <§r> code block
+        <§s> striked
+    ```
+
+    ## by adding some ## at the start of your lines you can create some coments
+    ## into your embed's code
+
+
+</embed>

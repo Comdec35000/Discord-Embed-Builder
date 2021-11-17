@@ -3,6 +3,7 @@ const fs = require('fs');
 const Compiler = require('./compiler/compiler.js');
 const Lexer = require('./lexer/lexer.js');
 const Parser = require('./parser/parser.js');
+const { MessageEmbed } = require('discord.js');
 
 class EmbedBuilder {
 
@@ -23,6 +24,10 @@ class EmbedBuilder {
 
     }
 
+    /**
+     * 
+     * @returns {Object} An objet that represent a discord message content 
+     */
     create() {
 
         for(const key in this.params) {
