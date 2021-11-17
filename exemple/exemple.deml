@@ -27,5 +27,24 @@
     ## by adding some ## at the start of your lines you can create some coments
     ## into your embed's code
 
+    <div title="Here's my not-inline field ^^">
+        I can put some variables in my code by putting it like this : `<$my_variable>`
+    </div>
+
+    <span title="Here's my inline field ^^">
+        :wink:
+    </span>
+    ## Can also add some metas to my embed : 
+    <meta color="<$color>"/> ## You can put you variables almost everywere in the embed code ^^
+    <meta timestamp="2021-11-14T11:44:29.043Z"/>
+    <meta url="https://www.discord.com"/>
+
+    ## There's some additionnals tag you can put into your code :
+    ##
+    ## <img url="https://cdn.discordapp.com/embed/avatars/0.png"/>
+    ## <thumb url="https://cdn.discordapp.com/embed/avatars/0.png"/>
+    ## 
+    ## <footer url="https://cdn.discordapp.com/embed/avatars/0.png"> My footer </footer>
+    ## <author url="https://cdn.discordapp.com/embed/avatars/0.png" ref="https://www.discord.com"> My author </author>
 
 </embed>
