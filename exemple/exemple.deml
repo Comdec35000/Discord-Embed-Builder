@@ -34,8 +34,11 @@
     <span title="Here's my inline field ^^">
         :wink:
     </span>
+    
     ## Can also add some metas to my embed : 
-    <meta color="<$color>"/> ## You can put you variables almost everywere in the embed code ^^
+    ##
+    ## You can put you variables almost everywere in the embed code ^^
+    <meta color="<$color>"/>  
     <meta timestamp="2021-11-14T11:44:29.043Z"/>
     <meta url="https://www.discord.com"/>
 
