@@ -1,6 +1,6 @@
 {
   "name": "discord_embed_markup_language",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
